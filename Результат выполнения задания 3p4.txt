@@ -1,0 +1,17 @@
+C:\Users\User\PycharmProjects\PythonProject\.venv\Scripts\python.exe C:\Users\User\PycharmProjects\PythonProject\1-3_DZ_2.py 
+{
+  "persons": [
+    "Сергей Сидоров",
+    "Анна Кузнецова"
+  ],
+  "organizations": [
+    "Яндекс",
+    "Сбер"
+  ],
+  "dates": [
+    "20 апреля 2026 года",
+    "1 марта 2025 года"
+  ]
+}
+
+Process finished with exit code 0

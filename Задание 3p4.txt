@@ -1,0 +1,76 @@
+import json
+from typing import List
+from pydantic import BaseModel, Field, ValidationError
+import ollama
+
+
+# Определяем целевую структуру (как и раньше)
+class ExtractedEntities(BaseModel):
+    persons: List[str] = Field(description="Список имён людей")
+    organizations: List[str] = Field(description="Список названий организаций")
+    dates: List[str] = Field(description="Список дат")
+
+
+def extract_entities(text: str, max_retries: int = 2) -> dict:
+    """
+    Извлекает сущности из текста через Ollama (qwen3:8b) с принудительным JSON.
+
+    Args:
+        text: Исходный текст.
+        max_retries: Количество повторных попыток при ошибках валидации.
+
+    Returns:
+        Словарь с ключами persons, organizations, dates.
+    """
+    text = ("""Сегодня, 20 апреля 2026 года, Сергей Сидоров из компании "Яндекс" общался с Анной Кузнецовой,
+    которая работает в Сбере. Они упомянули контракт от 1 марта 2025 года.""")
+    system_prompt = (
+        "Ты — строгий извлекатель именованных сущностей. "
+        "Из текста выдели ТОЛЬКО людей (персон), организации и даты. "
+        "Ответ должен быть ТОЛЬКО в формате JSON, без пояснений, без markdown, без дополнительного текста. "
+        "Следуй этой схеме:\n"
+        "{\n"
+        "  \"persons\": [\"Иван Иванов\", \"Мария Петрова\"],\n"
+        "  \"organizations\": [\"Рога и Копыта\", \"ООО ТехноИнновации\"],\n"
+        "  \"dates\": [\"15 марта 2025 года\", \"5 января 2024\"]\n"
+        "}\n"
+        "Если какой-то тип сущности отсутствует, верни пустой список. "
+        "Имена и названия пиши в исходном виде из текста."
+    )
+
+    for attempt in range(max_retries + 1):
+        try:
+            response = ollama.chat(
+                model="qwen3:8b",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": text}
+                ],
+                options={
+                    "temperature": 0.0,  # минимизируем креатив
+                    "format": "json"  # принудительный JSON-вывод
+                }
+            )
+            # Извлекаем содержимое ответа
+            raw_content = response["message"]["content"].strip()
+
+
+            # Парсим JSON
+            data = json.loads(raw_content)
+
+            # Валидируем через Pydantic (он же приводит типы, но у нас списки)
+            validated = ExtractedEntities(**data)
+            return validated.model_dump()
+
+        except (json.JSONDecodeError, ValidationError, KeyError) as e:
+            if attempt == max_retries:
+                # В крайнем случае возвращаем пустую структуру и логируем ошибку
+                print(f"[ERROR] Не удалось получить корректный JSON после {max_retries + 1} попыток: {e}")
+                return {"persons": [], "organizations": [], "dates": []}
+            # Пробуем ещё раз (модель могла сгенерировать лишний текст)
+            continue
+sample = """
+Сегодня, 20 апреля 2026 года, Сергей Сидоров из компании "Яндекс" общался с Анной Кузнецовой,
+которая работает в Сбере. Они упомянули контракт от 1 марта 2025 года. """
+result = extract_entities(sample)
+print(json.dumps(result, ensure_ascii=False, indent=2))
