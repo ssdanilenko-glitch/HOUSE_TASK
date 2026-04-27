@@ -1,0 +1,9 @@
+qwen3:8b             | TTFT: 0.178s | Total: 5.87s | 101.1 tok/s
+
+qwen3:8b: 96% (4/25)
+gemma4:e4b           | TTFT: 0.398s | Total: 6.05s | 109.0 tok/s
+
+gemma4:e4b: 92% (4/25)
+qwen3.5:9b           | TTFT: 0.429s | Total: 29.49s | 72.1 tok/s
+
+qwen3.5:9b: 96% (4/25)
