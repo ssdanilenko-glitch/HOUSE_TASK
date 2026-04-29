@@ -1,0 +1,31 @@
+Шаг 1. Выберите задачу:
+• Классификация тональности
+отзывов (sentiment analysis)
+
+Шаг 2. Найдите 3 модели на
+HuggingFace Hub для выбранной
+задачи:
+• Используйте HfApi.list_models() для
+поиска
+• Прочитайте Model Card каждой
+модели
+• Проверьте лицензии
+tabularisai/multilingual-sentiment-analysis 
+  Автор: tabularisai
+  Скачиваний: 633,049
+  Лицензия: cc-by-nc-4.0
+  Теги: transformers, safetensors, distilbert, text-classification, sentiment-analysis, sentiment, synthetic data, multi-class
+  Размер: 135328517 параметров
+daekeun-ml/koelectra-small-v3-nsmc
+  Автор: daekeun-ml
+  Скачиваний: 3,117,680
+  Лицензия: mit
+  Теги: transformers, pytorch, safetensors, electra, text-classification, classification, ko, dataset:nsmc
+  Размер: 14123010 параметров
+cardiffnlp/twitter-roberta-base-sentiment-latest
+  Автор: cardiffnlp
+  Скачиваний: 3,464,385
+  Лицензия: cc-by-4.0
+  Теги: transformers, pytorch, tf, roberta, text-classification, en, dataset:tweet_eval, arxiv:2202.03829
+  Размер: неизвестно параметров
+
