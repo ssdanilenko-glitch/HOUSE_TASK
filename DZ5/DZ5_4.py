@@ -154,22 +154,22 @@ def main():
     for r in all_results:
         print(f"\n--- Детали для модели: {r['model_id']} ---")
         detail_data = []
-        for i, (text, true) in enumerate(zip(test_samples, r["ground_truths"])):
+        for i, sample in enumerate(test_samples):
+            sample_text, true_label = sample  # распаковываем текст и истинную метку
             pred = r["predictions"][i]
             time_ms = r["times_per_sample_ms"][i]
             detail_data.append([
                 i + 1,
-                text[:55] + ("..." if len(text) > 55 else ""),
-                true,
+                sample_text[:55] + ("..." if len(sample_text) > 55 else ""),
+                true_label,
                 pred,
-                "✓" if pred == true else "✗",
+                "✓" if pred == true_label else "✗",
                 f"{time_ms:.2f} мс"
             ])
         print(tabulate(detail_data,
                        headers=["#", "Текст (первые 55 симв.)", "Истинная метка", "Предсказание", "Совпадение",
                                 "Время"],
                        tablefmt="simple"))
-
     # Победители
     print("\n" + "=" * 80)
     if all_results:
