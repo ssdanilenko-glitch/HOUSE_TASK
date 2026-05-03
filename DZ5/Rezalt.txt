@@ -115,3 +115,7 @@ cardiffnlp/twitter-roberta-base-sentiment-latest
 🏆 Лучшая точность: cointegrated/rubert-tiny-sentiment-balanced (80.0%)
 ⚡ Самый быстрый инференс: cointegrated/rubert-tiny2 (6.49 мс/пример)
 ---------------------+-------------------+
+5.
+Loading weights: 100%|██████████| 57/57 [00:00<00:00, 15821.28it/s]
+* Running on local URL:  http://127.0.0.1:7860
+* To create a public link, set `share=True` in `launch()`.
